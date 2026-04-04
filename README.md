@@ -25,5 +25,5 @@ How to Run/Execute:
 3. Run app:
    streamlit run app.py
 
-## 📁 Dataset
-Dataset sourced from Kaggle phishing URL datasets.
+Dataset:
+Sourced from Kaggle: https://www.kaggle.com/datasets/shashwatwork/web-page-phishing-detection-dataset?resource=download
