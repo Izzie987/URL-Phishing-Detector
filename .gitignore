@@ -1,0 +1,6 @@
+backend/node_modules/
+node_modules/
+ml-api/.venv/
+__pycache__/
+*.pyc
+.vscode/

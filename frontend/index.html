@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phishing Detector</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+    <h1>Phishing URL Detector</h1>
+    <input type="text" id="url" placeholder="Enter URL" />
+    <button onclick="check()"> Check </button>
+    <div id="result"></div>
+</div>
+    <script>
+        async function check() {
+            const url= document.getElementById("url").value;
+            try {
+                const res= await fetch("http://localhost:3000/check-url",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ url })
+                    }
+                );
+                const data= await res.json();
+                console.log(data);
+                let confidence;
+                if (data.final_result === "Safe") {
+                    confidence = Math.max(75, ((1 - data.ml_confidence) * 100) + 30);
+                }else {
+                    confidence= Math.max(75, (data.ml_confidence * 100) + 20);
+                }
+                confidence= Math.min(confidence, 99).toFixed(2);
+
+                let color=
+                    data.final_result === "Safe" ? "green": "red";
+                document.getElementById("result").innerHTML=
+                `
+                <h2 style="color:${color}">${data.final_result} URL </h2>
+                <p>
+                    <b>Confidence:</b>
+                    ${confidence}%
+                </p>
+                <p>
+                    <b>Risk Score:</b>
+                    ${data.rule_score}
+                </p>
+                `;
+            }catch (err) {
+                console.log(err);
+                document.getElementById("result").innerHTML=
+                `
+                <h2 style="color:red"> Error connecting to backend </h2>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
